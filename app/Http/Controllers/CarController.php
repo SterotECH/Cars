@@ -14,7 +14,8 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::all();
+        $cars = Car::all()->toArray();
+        // $cars = json_decode($cars);
         // $cars = Car::where('name', '=', 'Audi')->get();
         // $cars = Car::chunk(2,function ($cars){
         //     foreach($cars as $car){
@@ -25,6 +26,7 @@ class CarController extends Controller
         // $cars = Car::where('name', '=','BMW')->firstOrFail();
         // print_r(Car::where('name','=','Audi')->count());
         // print_r(Car::sum('founded'));
+        var_dump($cars);
         return view('Cars.index', ['cars' => $cars]);
     }
 
@@ -80,7 +82,7 @@ class CarController extends Controller
      */
     public function show($id)
     {
-        //
+
     }
 
     /**
@@ -91,7 +93,10 @@ class CarController extends Controller
      */
     public function edit($id)
     {
-        return view('Cars.edit');
+        $car = Car::find($id)->first();
+        // dd($car);
+
+        return view('Cars.edit')->with('car', $car);
     }
 
     /**
@@ -103,7 +108,13 @@ class CarController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $car = Car::where('id',$id)->update([
+            'name' => $request->input('name'),
+            'founded' => $request->input('founded'),
+            'description' => $request->input('description')
+        ]);
+
+        return redirect('/cars');
     }
 
     /**
@@ -112,8 +123,10 @@ class CarController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Car $car)
     {
-        //
+        // $car = Car::find($id)->first();
+        $car->delete();
+        return redirect('/cars');
     }
 }
