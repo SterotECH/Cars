@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Car;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class CarController extends Controller
@@ -14,7 +15,8 @@ class CarController extends Controller
      */
     public function index()
     {
-        $cars = Car::all()->toArray();
+        // Pagination Query Builder
+        $cars = Car::all();
         // $cars = json_decode($cars);
         // $cars = Car::where('name', '=', 'Audi')->get();
         // $cars = Car::chunk(2,function ($cars){
@@ -26,7 +28,6 @@ class CarController extends Controller
         // $cars = Car::where('name', '=','BMW')->firstOrFail();
         // print_r(Car::where('name','=','Audi')->count());
         // print_r(Car::sum('founded'));
-        var_dump($cars);
         return view('Cars.index', ['cars' => $cars]);
     }
 
@@ -82,7 +83,10 @@ class CarController extends Controller
      */
     public function show($id)
     {
-
+        $car = Car::find($id);
+        $products = Product::find($id);
+        dd($products);
+        return view('Cars.show')->with('car' , $car);
     }
 
     /**
